@@ -4,4 +4,4 @@ __pycache__/
 .terraform/
 *.tfstate
 *.tfstate.*
-*.pem
+*.pemansible/inventory.ini

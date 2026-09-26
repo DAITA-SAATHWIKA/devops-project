@@ -1,0 +1,29 @@
+---
+- name: Deploy Flask application on EC2
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Copy application files to EC2
+      copy:
+        src: ../app/
+        dest: /home/ubuntu/app/
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Build Docker image
+      command: docker build -t devops-app:latest .
+      args:
+        chdir: /home/ubuntu/app
+
+    - name: Remove existing container
+      command: docker rm -f devops-container
+      failed_when: false
+
+    - name: Run Docker container
+      command: >
+        docker run -d
+        --restart unless-stopped
+        -p 5000:5000
+        --name devops-container
+        devops-app:latest
